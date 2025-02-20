@@ -53,20 +53,33 @@ public class Jobseeker_dashboard_viewAll_fragment extends Fragment {
     private void loadAppliedJobs() {
         String userId = auth.getCurrentUser().getUid(); // Get logged-in user's ID
 
-        db.collection("applications")
-                .whereEqualTo("userId", userId) // Fetch jobs applied by the logged-in user
+        db.collectionGroup("appliedUsers")
+                .whereEqualTo("userId", userId) // Look for userId in appliedUsers subcollection
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    jobList.clear();
+                    jobList.clear(); // Clear old data before adding new
                     if (queryDocumentSnapshots.isEmpty()) {
                         Toast.makeText(getActivity(), "No applied jobs found", Toast.LENGTH_SHORT).show();
                     } else {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Job job = document.toObject(Job.class);
-                            job.setId(document.getId()); // Set job ID
-                            jobList.add(job);
+                        for (QueryDocumentSnapshot appliedJobDoc : queryDocumentSnapshots) {
+                            String jobId = appliedJobDoc.getReference().getParent().getParent().getId(); // Get job document ID
+
+                            // Fetch job details from 'jobs' collection using jobId
+                            db.collection("jobs")
+                                    .document(jobId)
+                                    .get()
+                                    .addOnSuccessListener(jobDoc -> {
+                                        if (jobDoc.exists()) {
+                                            Job job = jobDoc.toObject(Job.class);
+                                            if (job != null) {
+                                                job.setId(jobId); // Set job ID
+                                                jobList.add(job);
+                                                jobAdapter1.notifyDataSetChanged();
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> Log.e("Firestore", "Error loading job details", e));
                         }
-                        jobAdapter1.notifyDataSetChanged();
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -74,4 +87,6 @@ public class Jobseeker_dashboard_viewAll_fragment extends Fragment {
                     Log.e("Firestore", "Error loading applied jobs: ", e);
                 });
     }
+
+
 }

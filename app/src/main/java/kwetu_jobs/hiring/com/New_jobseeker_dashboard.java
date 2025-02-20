@@ -39,7 +39,7 @@ public class New_jobseeker_dashboard extends AppCompatActivity {
                     if (itemId == R.id.jobseeker_home) {
                         ReplaceFragment(new Jobseeker_dashboard_home_fragment());
                     } else if (itemId == R.id.jobseeker_apply) {
-                        ReplaceFragment(new JobSeeker_dashboard_applyJob_fragment());
+                        ReplaceFragment(new Jobseeker_dashboard_applying_jobs());
                     } else if (itemId == R.id.jobseeker_view) {
                         ReplaceFragment(new Jobseeker_dashboard_viewAll_fragment());
                     }

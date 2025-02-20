@@ -1,21 +1,23 @@
 package kwetu_jobs.hiring.com;
 
-// this will  contains the fields which stores all the job information posted by the employers which later then will show to the job seeker to apply the jobs.
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class job_adapter_apply extends RecyclerView.Adapter<job_adapter_apply.JobViewHolder> {
 
@@ -61,7 +63,7 @@ public class job_adapter_apply extends RecyclerView.Adapter<job_adapter_apply.Jo
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
                                 holder.applyJobBtn.setText("Applied");
-                                holder.applyJobBtn.setEnabled(false);
+                              //  holder.applyJobBtn.setEnabled(false);
                             }
                         });
             }
@@ -72,33 +74,35 @@ public class job_adapter_apply extends RecyclerView.Adapter<job_adapter_apply.Jo
     }
 
     private void applyForJob(JobViewHolder holder, Job job) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(context, "Please log in to apply for jobs.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Please log in to apply.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String userId = currentUser.getUid();
-        String jobId = job.getId();
+        String jobId = job.getId();  // Ensure job ID exists
 
-        // Store application details in Firestore
+        // Create application data
         Map<String, Object> applicationData = new HashMap<>();
         applicationData.put("userId", userId);
-        applicationData.put("jobId", jobId);
-        applicationData.put("timestamp", System.currentTimeMillis());
+        applicationData.put("appliedAt", System.currentTimeMillis());
 
+
+        // Save in "applications" collection under job ID
         db.collection("applications")
                 .document(jobId) // Job ID as document
                 .collection("appliedUsers")
-                .document(userId) // Prevent reapplying
+                .document(userId) // User ID as sub-document
                 .set(applicationData)
                 .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Applied successfully!", Toast.LENGTH_SHORT).show();
                     holder.applyJobBtn.setText("Applied");
-                    holder.applyJobBtn.setEnabled(false);
-                    Toast.makeText(context, "Job applied successfully!", Toast.LENGTH_SHORT).show();
+                  //  holder.applyJobBtn.setEnabled(false);
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(context, "Failed to apply: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Failed to apply: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
@@ -121,6 +125,5 @@ public class job_adapter_apply extends RecyclerView.Adapter<job_adapter_apply.Jo
             jobCategory = itemView.findViewById(R.id.jobCategory);
             applyJobBtn = itemView.findViewById(R.id.applyJobBtn); // Apply Button
         }
-
     }
 }
