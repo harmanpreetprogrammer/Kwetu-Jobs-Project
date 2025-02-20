@@ -86,8 +86,6 @@ public class Employ_Login_page extends AppCompatActivity {
             // Firebase authentication
             logAuth_emp.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-
-
                         if (task.isSuccessful()) {
                             FirebaseUser user = logAuth_emp.getCurrentUser();
                             if (user != null) {

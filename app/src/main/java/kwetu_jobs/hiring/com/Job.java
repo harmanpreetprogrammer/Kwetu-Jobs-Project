@@ -1,4 +1,5 @@
 package kwetu_jobs.hiring.com;
+// for getting and setting the job information which will display all the jobs posted by the employer to the job seeker
 
 public class Job {
     private String id;
@@ -8,12 +9,11 @@ public class Job {
     private String jobType;
     private double salary;
     private String Category;
-    private String  userID;
     // Empty Constructor (Required for Firebase)
     public Job() {
     }
 
-    public Job(String id, String title, String company, String location, String jobType, double salary, String Category,String UserID) {
+    public Job(String id, String title, String company, String location, String jobType, double salary, String Category) {
         this.id = id;
         this.title = title;
         this.company = company;
@@ -21,15 +21,13 @@ public class Job {
         this.jobType = jobType;
         this.salary = salary;
         this.Category = Category;
-        this.userID=userID;
+
 
     }
 
     // Getters & Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    public String getUserID() { return userID; }
-    public void setUserID(String userID) { this.userID = userID; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

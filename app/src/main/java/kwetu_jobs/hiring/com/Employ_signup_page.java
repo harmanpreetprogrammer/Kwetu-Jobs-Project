@@ -136,6 +136,7 @@ public class Employ_signup_page extends AppCompatActivity {
     private void navigateToDashboard() {
         intent_emp = new Intent(this,Employer_create_profile.class);
         startActivity(intent_emp);
+
         finish();
 
     }

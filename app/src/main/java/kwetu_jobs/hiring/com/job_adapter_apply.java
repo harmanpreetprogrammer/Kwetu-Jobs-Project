@@ -1,5 +1,6 @@
 package kwetu_jobs.hiring.com;
 
+// this will  contains the fields which stores all the job information posted by the employers which later then will show to the job seeker to apply the jobs.
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,5 +121,6 @@ public class job_adapter_apply extends RecyclerView.Adapter<job_adapter_apply.Jo
             jobCategory = itemView.findViewById(R.id.jobCategory);
             applyJobBtn = itemView.findViewById(R.id.applyJobBtn); // Apply Button
         }
+
     }
 }
