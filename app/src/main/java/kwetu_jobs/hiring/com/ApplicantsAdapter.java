@@ -31,7 +31,14 @@ public class ApplicantsAdapter extends RecyclerView.Adapter<ApplicantsAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Applicant applicant = applicantsList.get(position);
         holder.fullName.setText("Name: " + applicant.getUsername()); // fullName from Firestore
-        holder.workExperience.setText("Experience: " + applicant.getExperience()); // workExperience from Firestore
+        holder.workExperience.setText("Experience: " + applicant.getExperience());
+
+        String url = applicant.getres_url_dl();
+        if (!url.equals("Not Provided")) {
+            holder.resume_id.setText(android.text.Html.fromHtml("<a href=\"" + url + "\">Download Resume</a>"));
+        } else {
+            holder.resume_id.setText("Resume URL: Not Provided");
+        }
     }
 
     @Override
@@ -46,12 +53,16 @@ public class ApplicantsAdapter extends RecyclerView.Adapter<ApplicantsAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView fullName, workExperience;
+        TextView fullName, workExperience, resume_id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             fullName = itemView.findViewById(R.id.fullName); // Updated ID
             workExperience = itemView.findViewById(R.id.workExperience); // Updated ID
+            resume_id = itemView.findViewById(R.id.resume_url_dl);
+
+            resume_id.setClickable(true);
+            resume_id.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
         }
     }
 }

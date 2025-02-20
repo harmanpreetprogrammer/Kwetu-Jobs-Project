@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Employer_dashboard_review_jobs">
+    tools:context=".Employer_dashboard_review_jobs"
+    android:layout_marginBottom="80dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPostedJobs"

@@ -37,6 +37,7 @@ public class JobSeeker_profile extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
     Intent intent1;
+    private String resumeUrl;
 
 
     @Override
@@ -131,9 +132,15 @@ public class JobSeeker_profile extends AppCompatActivity {
             String userId = currentUser.getUid();
             StorageReference fileRef = FirebaseStorage.getInstance().getReference("resumes/").child(userId + ".pdf");
             fileRef.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
+
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                     resumeUrl = uri.toString();
+                                });
                         Toast.makeText(JobSeeker_profile.this, "File uploaded successfully", Toast.LENGTH_SHORT).show();
 
                     } else {
@@ -158,7 +165,8 @@ public class JobSeeker_profile extends AppCompatActivity {
                 skillsInput.getText().toString(),
                 workExpInput.getText().toString(),
                 urlInput.getText().toString(),
-                fileUri != null ? getFileName(fileUri) :""
+                fileUri != null ? getFileName(fileUri) :"",
+                fileUri != null ? resumeUrl : ""
         );
 
         profileRef.set(userProfile).addOnCompleteListener(new OnCompleteListener<Void>() {

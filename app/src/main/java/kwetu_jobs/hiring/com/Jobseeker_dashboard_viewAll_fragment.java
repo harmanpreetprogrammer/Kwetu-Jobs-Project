@@ -51,20 +51,29 @@ public class Jobseeker_dashboard_viewAll_fragment extends Fragment {
     }
 
     private void loadAppliedJobs() {
-        String userId = auth.getCurrentUser().getUid(); // Get logged-in user's ID
+        String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        if (userId == null) {
+            Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
+            Log.e("Auth", "User is null. Not authenticated.");
+            return;
+        }
+
+        Log.d("Firestore", "Fetching applied jobs for user ID: " + userId);
 
         db.collectionGroup("appliedUsers")
-                .whereEqualTo("userId", userId) // Look for userId in appliedUsers subcollection
+                .whereEqualTo("userId", userId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    jobList.clear(); // Clear old data before adding new
+                    jobList.clear();
                     if (queryDocumentSnapshots.isEmpty()) {
                         Toast.makeText(getActivity(), "No applied jobs found", Toast.LENGTH_SHORT).show();
+                        Log.d("Firestore", "No applied jobs found for user: " + userId);
                     } else {
                         for (QueryDocumentSnapshot appliedJobDoc : queryDocumentSnapshots) {
-                            String jobId = appliedJobDoc.getReference().getParent().getParent().getId(); // Get job document ID
+                            String jobId = appliedJobDoc.getReference().getParent().getParent().getId();
+                            Log.d("Firestore", "Found applied job ID: " + jobId);
 
-                            // Fetch job details from 'jobs' collection using jobId
                             db.collection("jobs")
                                     .document(jobId)
                                     .get()
@@ -72,10 +81,13 @@ public class Jobseeker_dashboard_viewAll_fragment extends Fragment {
                                         if (jobDoc.exists()) {
                                             Job job = jobDoc.toObject(Job.class);
                                             if (job != null) {
-                                                job.setId(jobId); // Set job ID
+                                                job.setId(jobId);
                                                 jobList.add(job);
                                                 jobAdapter1.notifyDataSetChanged();
+                                                Log.d("Firestore", "Loaded job: " + job.getTitle());
                                             }
+                                        } else {
+                                            Log.e("Firestore", "Job document does not exist: " + jobId);
                                         }
                                     })
                                     .addOnFailureListener(e -> Log.e("Firestore", "Error loading job details", e));

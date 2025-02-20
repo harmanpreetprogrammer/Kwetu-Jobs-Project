@@ -9,10 +9,11 @@ package kwetu_jobs.hiring.com;
         private String workExperience;
         private String url;
         private String resume;
+        private String url_dwld;
 
         // Constructor
         public UserProfile(String fullName, String email, String phone, String location,
-                           String skills, String workExperience, String url, String resume) {
+                           String skills, String workExperience, String url, String resume,String url_dwld) {
             this.fullName = fullName;
             this.email = email;
             this.phone = phone;
@@ -21,6 +22,7 @@ package kwetu_jobs.hiring.com;
             this.workExperience = workExperience;
             this.url = url;
             this.resume=resume;
+            this.url_dwld=url_dwld;
         }
 
         // Getters and Setters
@@ -38,6 +40,13 @@ package kwetu_jobs.hiring.com;
 
         public void setEmail(String email) {
             this.email = email;
+        }
+        public String geturl_dwld() {
+            return url_dwld;
+        }
+
+        public void seturl_dwld(String url_dwld) {
+            this.url_dwld = url_dwld;
         }
 
         public String getPhone() {

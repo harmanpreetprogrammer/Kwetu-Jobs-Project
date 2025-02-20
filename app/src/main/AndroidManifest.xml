@@ -4,11 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
+
 
     <application
         android:allowBackup="true"
@@ -24,9 +23,7 @@
         <activity
             android:name=".Viewing_employer_profile"
             android:exported="false" />
-        <activity
-            android:name=".Employer_viewing_profile"
-            android:exported="false" />
+
         <activity
             android:name=".Employer_create_profile"
             android:exported="false" />

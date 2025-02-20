@@ -28,6 +28,7 @@ public class Employer_dashboard_screening extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private Context context; // Store context for Toast messages
+    private boolean anyApplicantsFound = false; // Track if any applicants exist
 
     public Employer_dashboard_screening() {
         // Required empty public constructor
@@ -56,48 +57,67 @@ public class Employer_dashboard_screening extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-//        if (getArguments() != null) {
-            String jobId = getArguments().getString("jobId");
-            if (jobId != null) {
-                Toast.makeText(context, "Loading applicants for job ID: " + jobId, Toast.LENGTH_SHORT).show();
-                loadApplicants(jobId);
-            } else {
-                Toast.makeText(context, "Error: Job ID is null!", Toast.LENGTH_SHORT).show();
-                Log.e("EmployerDashboard", "Job ID is null");
-            }
-//        } else {
-//            Toast.makeText(context, "Error: No arguments received!", Toast.LENGTH_SHORT).show();
-//        }
+        loadApplicants();
     }
 
+    private void loadApplicants() {
+        String currentEmployerId = auth.getCurrentUser().getUid(); // Get logged-in employer ID
 
-    private void loadApplicants(String jobId) {
+        db.collection("jobs")
+                .whereEqualTo("employerId", currentEmployerId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot jobDoc : queryDocumentSnapshots.getDocuments()) {
+                            String jobId = jobDoc.getId(); // Get jobId
+
+                            // Now fetch applicants for this job
+                            fetchApplicants(jobId);
+                        }
+                    } else {
+                        Toast.makeText(context, "No jobs found for this employer.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Error fetching jobs!", Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Error fetching employer jobs", e);
+                });
+    }
+
+    private void fetchApplicants(String jobId) {
         db.collection("applications").document(jobId).collection("appliedUsers")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
-                        Toast.makeText(context, "No applicants found.", Toast.LENGTH_SHORT).show();
-                        return;
+                        return; // Do nothing, avoid multiple toasts
                     }
 
-                    applicantsList.clear(); // Clear the list before adding new data
+                    if (!anyApplicantsFound) {
+                        applicantsList.clear(); // Clear only once before adding new applicants
+                        anyApplicantsFound = true;
+                    }
 
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                         String userId = document.getId(); // Get user ID
 
-                        // Fetch user details from the profiles collection
+                        // Fetch user details from profiles collection
                         db.collection("profiles").document(userId)
                                 .get()
                                 .addOnSuccessListener(profileDoc -> {
                                     if (profileDoc.exists()) {
                                         String username = profileDoc.getString("fullName");
                                         String experience = profileDoc.getString("workExperience");
+                                        String urlDwld = profileDoc.getString("url_dwld");
 
-                                        if (username != null && experience != null) {
-                                            Applicant applicant = new Applicant(username, experience,userId);
-                                            applicantsList.add(applicant);
-                                            applicantsAdapter.notifyDataSetChanged();
-                                        }
+                                        // Handle null values
+                                        username = (username != null) ? username : "Unknown";
+                                        experience = (experience != null) ? experience : "Not Provided";
+                                        urlDwld = (urlDwld != null) ? urlDwld : "Not Provided";
+
+
+                                        Applicant applicant = new Applicant(userId, username, experience,urlDwld);
+                                        applicantsList.add(applicant);
+                                        applicantsAdapter.notifyDataSetChanged();
                                     } else {
                                         Log.e("Firestore", "Profile not found for user ID: " + userId);
                                     }
@@ -110,5 +130,4 @@ public class Employer_dashboard_screening extends Fragment {
                     Log.e("Firestore", "Error fetching applicants", e);
                 });
     }
-
 }
