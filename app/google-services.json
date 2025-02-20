@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "89520559926",
+    "project_id": "kwetu-jobs",
+    "storage_bucket": "kwetu-jobs.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89520559926:android:0f00d922c1c0995f25c597",
+        "android_client_info": {
+          "package_name": "com.hiring_intellignece"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTP3Sq8QchpxPpmhSGanR6EM6asBZMfII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89520559926:android:d9878e63177d70c625c597",
+        "android_client_info": {
+          "package_name": "kwetu_jobs.hiring.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTP3Sq8QchpxPpmhSGanR6EM6asBZMfII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

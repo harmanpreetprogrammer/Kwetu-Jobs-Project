@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Kwetu-Jobs-Project</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <style name="LargeTextStyle" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">16sp</item> <!-- Set your desired text size here -->
+    </style>
+
+    <!-- Job Types -->
+    <string-array name="job_types">
+        <item>Full-time</item>
+        <item>Part-time</item>
+        <item>Contract</item>
+        <item>Remote</item>
+        <item>Internship</item>
+    </string-array>
+
+    <!-- Job Categories (IT Industry) -->
+    <string-array name="job_categories">
+        <item>Frontend Developer</item>
+        <item>Backend Developer</item>
+        <item>Full-Stack Developer</item>
+        <item>DevOps Engineer</item>
+        <item>Data Scientist</item>
+        <item>Cybersecurity Analyst</item>
+        <item>Mobile App Developer</item>
+    </string-array>
+
+</resources>

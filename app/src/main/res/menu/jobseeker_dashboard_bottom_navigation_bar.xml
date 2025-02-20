@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home"
+        android:id="@+id/jobseeker_home"
+        android:icon="@drawable/home_icon"/>
+
+    <item android:title="Apply"
+        android:id="@+id/jobseeker_apply"
+        android:icon="@drawable/search_job" />
+
+    <item android:title="View"
+        android:id="@+id/jobseeker_view"
+        android:icon="@drawable/apply_job"/>
+
+</menu>
